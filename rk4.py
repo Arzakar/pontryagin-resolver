@@ -3,7 +3,7 @@ import math as m
 
 
 
-def rk4_step(equations: np.ndarray, current_state: np.ndarray, current_dif_var: float, step: float, nonstdvars: dict) -> np.ndarray:
+def rk4_step(equations: np.ndarray, current_state: np.ndarray, current_dif_var: float, step: float, constants: dict, nonstdvars: dict) -> np.ndarray:
     eq = equations
     y = current_state
     t = current_dif_var
@@ -15,7 +15,7 @@ def rk4_step(equations: np.ndarray, current_state: np.ndarray, current_dif_var: 
         # i - порядковый номер уравнения в системе
         for i in range(eq.size):
             if j == 0:
-                k[i, j] = h * eq[i](t, y, nonstdvars)
+                k[i, j] = h * eq[i](t, y, constants, nonstdvars)
                 continue
             
             # Определяем коэффициент параметров
@@ -26,7 +26,7 @@ def rk4_step(equations: np.ndarray, current_state: np.ndarray, current_dif_var: 
             t_j = t + h * coeff
             y_j = y + k[:, j - 1] * coeff
 
-            k[i, j] = h * eq[i](t_j, y_j, nonstdvars)
+            k[i, j] = h * eq[i](t_j, y_j, constants, nonstdvars)
 
     dy = (k[:, 0] + 2 * k[:, 1] + 2 * k[:, 2] + k[:, 3]) / 6
 
